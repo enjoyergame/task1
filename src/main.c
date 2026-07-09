@@ -5,10 +5,9 @@
 МК-101
 */
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "replacer.h"
 
-int main(int argc, char *argv[], char *envp[]) {
-    
+int main() {
+    printf("N = %d\n", N);
     return 0;
 }

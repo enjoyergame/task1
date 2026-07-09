@@ -8,6 +8,7 @@ set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 option(BUILD_SHARED_LIBS "Build libraries as shared(dynamic)" OFF)
 option(BUILD_TESTING "Build the testing suite" ON)
 
+#для cmake -B build -DN=2048
 set(N 1024 CACHE STRING "Size of the read buffer N")
 add_compile_definitions(N=${N})
 
@@ -21,7 +22,7 @@ if(BUILD_TESTING)
     enable_testing()
     
     add_custom_target(test_all
-        COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG> --output-on-failure
+        COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
         COMMENT "Running tests"
     )
 endif()
