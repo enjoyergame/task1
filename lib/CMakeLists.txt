@@ -4,9 +4,10 @@ add_library(replacer_lib
     src/utils.h
     include/replacer.h
 )
+
 target_include_directories(replacer_lib
     PUBLIC 
-        include
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
     PRIVATE 
-        src
+        ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
