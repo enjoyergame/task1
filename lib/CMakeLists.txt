@@ -1,0 +1,12 @@
+add_library(replacer_lib
+    src/replacer.c
+    src/utils.c
+    src/utils.h
+    include/replacer.h
+)
+target_include_directories(replacer_lib
+    PUBLIC 
+        include
+    PRIVATE 
+        src
+)
