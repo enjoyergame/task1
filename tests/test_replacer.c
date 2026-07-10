@@ -7,6 +7,6 @@ tests
 #include <stdio.h>
 
 int main() {
-    printf("Tests\n");
+    printf("Тесты\n");
     return 0;
 }

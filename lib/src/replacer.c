@@ -69,6 +69,42 @@ void free_replacer(replacer *r)
     r->match_idx = 0;
 }
 
+//
+static void feed_byte(FILE *out, replacer *search, replacer *replace, uint8_t c)
+{
+    if (c == search->data[search->match_idx])
+    {
+        search->match_idx++;
+        // Если собрали полное совпадение
+        if (search->match_idx == search->length)
+        {
+            fwrite(replace->data, 1, replace->length, out);
+            search->match_idx = 0;
+        }
+        return;
+    }
+
+    // Если совпадение сорвалось
+    if (search->match_idx == 0)
+    {
+        fwrite(&c, 1, 1, out);
+    }
+    else
+    {
+        fwrite(&search->data[0], 1, 1, out);
+
+        size_t failed_match_len = search->match_idx;
+        search->match_idx = 0;
+
+        for (size_t j = 1; j < failed_match_len; j++)
+        {
+            feed_byte(out, search, replace, search->data[j]);
+        }
+
+        feed_byte(out, search, replace, c);
+    }
+}
+
 int replace_stream(FILE *in, FILE *out, replacer *search, replacer *replace)
 {
     if (!in || !out || !search || !replace || search->length == 0)
@@ -83,31 +119,14 @@ int replace_stream(FILE *in, FILE *out, replacer *search, replacer *replace)
     {
         for (size_t i = 0; i < bytes_read; i++)
         {
-            if (buffer[i] == search->data[search->match_idx])
-            {
-                search->match_idx++;
-                
-                if (search->match_idx == search->length)
-                {
-                    fwrite(replace->data, 1, replace->length, out);
-                    search->match_idx = 0;
-                }
-            }
-            else
-            {
-                if (search->match_idx > 0)
-                {
-                    fwrite(search->data, 1, search->match_idx, out);
-                    search->match_idx = 0;
-                    
-                    if (buffer[i] == search->data[0]) {
-                        search->match_idx = 1;
-                        continue;
-                    }
-                }
-                fwrite(&buffer[i], 1, 1, out);
-            }
+            feed_byte(out, search, replace, buffer[i]);
         }
+    }
+
+    if (search->match_idx > 0)
+    {
+        fwrite(search->data, 1, search->match_idx, out);
+        search->match_idx = 0;
     }
 
     return 0;
