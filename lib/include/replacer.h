@@ -12,8 +12,11 @@
 #include <stdint.h>
 #include <ctype.h>
 #include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
 
-typedef struct {
+typedef struct
+{
     uint8_t *data;
     size_t length;
     size_t match_idx;
