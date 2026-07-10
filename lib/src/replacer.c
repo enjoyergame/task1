@@ -7,24 +7,29 @@
 
 #include "replacer.h"
 
-replacer strtobytes_smart(char *input_str) {
-    if (input_str == NULL) {
+replacer strtobytes_smart(char *input_str)
+{
+    if (input_str == NULL)
+    {
         replacer r = {NULL, 0, 0};
         return r;
     }
 
     // Пропускаем пробелы находим начало данных
     char *ptr = input_str;
-    while (isspace((unsigned char)*ptr)) {
+    while (isspace((unsigned char)*ptr))
+    {
         ptr++;
     }
 
     // Проверяем 0x или 0X
-    if (ptr[0] == '0' && (ptr[1] == 'x' || ptr[1] == 'X')) {
+    if (ptr[0] == '0' && (ptr[1] == 'x' || ptr[1] == 'X'))
+    {
         // Проверяем, есть ли что-то после 0x/0X
-        if (ptr[2] == '\0') {
-             replacer r = {NULL, 0, 0}; // если на входе только 0x
-             return r;
+        if (ptr[2] == '\0')
+        {
+            replacer r = {NULL, 0, 0}; // если на входе только 0x
+            return r;
         }
         // Если хекс strtobyte для строки без 0x
         return strtobyte(ptr + 2);
@@ -33,12 +38,13 @@ replacer strtobytes_smart(char *input_str) {
     // обрабатываем дефолтный текст
     replacer r = {NULL, 0, 0};
     // Используем ptr, чтобы убрать пробелы
-    size_t data_len = strlen(ptr); 
-    
-    //+1 для '\0' 
+    size_t data_len = strlen(ptr);
+
+    //+1 для '\0'
     r.data = (uint8_t *)malloc(data_len + 1);
-    
-    if (r.data == NULL) {
+
+    if (r.data == NULL)
+    {
         r.length = 0;
         return r;
     }
@@ -48,8 +54,9 @@ replacer strtobytes_smart(char *input_str) {
     // не от r.data[data_len] потому что в нем /0
     r.length = data_len;
     r.match_idx = 0;
-    
+
     return r;
+}
 
 replacer strtobyte(char *input_str)
 {
