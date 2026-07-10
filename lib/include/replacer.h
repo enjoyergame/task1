@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-
+#include <stdio.h>
 typedef struct
 {
     uint8_t *data; // Буфер

@@ -112,4 +112,3 @@ int replace_stream(FILE *in, FILE *out, replacer *search, replacer *replace)
 
     return 0;
 }
-}
