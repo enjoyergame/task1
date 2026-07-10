@@ -22,5 +22,6 @@ typedef struct
 
 replacer strtobytes_smart(char *input_str);
 void free_replacer(replacer *r);
+int replace_stream(FILE *in, FILE *out, replacer *search, replacer *replace);
 
 #endif

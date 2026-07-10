@@ -68,3 +68,21 @@ void free_replacer(replacer *r)
     r->length = 0;
     r->match_idx = 0;
 }
+
+int replace_stream(FILE *in, FILE *out, replacer *search, replacer *replace)
+{
+    if (!in || !out || !search || !replace || search->length == 0)
+    {
+        return -1;
+    }
+    uint8_t buffer[N];
+    size_t bytes_read;
+    search->match_idx = 0;
+
+    while ((bytes_read = fread(buffer, 1, N, in)) > 0)
+    {
+    }
+
+    return 0;
+}
+}
