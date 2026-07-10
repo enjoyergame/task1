@@ -7,37 +7,27 @@
 
 #include "replacer.h"
 
-static bool is_hex_string(const char *s)
-{
-    size_t len = strlen(s);
-    if (len == 0 || len % 2 != 0)
-        return false;
-    for (size_t i = 0; i < len; i++)
-    {
-        if (!isxdigit((unsigned char)s[i]))
-            return false;
-    }
-    return true;
-}
-
-replacer strtobytes_smart(char *input_str)
-{
-    if (input_str == NULL)
-    {
+replacer strtobytes_smart(char *input_str) {
+    if (input_str == NULL) {
         replacer r = {NULL, 0, 0};
         return r;
     }
-    if (is_hex_string(input_str))
-    {
-        return strtobyte(input_str); // хекс
+
+    if (strncmp(input_str, "0x", 2) == 0) {
+        if (strlen(input_str) <= 2) {
+             replacer r = {NULL, 0, 0}; // если на входе только 0x
+             return r;
+        }
+        // Если хекс strtobyte для строки без 0x
+        return strtobyte(input_str + 2);
     }
+
+    // обрабатываем дефолтный текст
     replacer r = {NULL, 0, 0};
     r.length = strlen(input_str);
-
     r.data = (uint8_t *)malloc(r.length);
-
-    if (r.data == NULL)
-    {
+    
+    if (r.data == NULL) {
         r.length = 0;
         return r;
     }

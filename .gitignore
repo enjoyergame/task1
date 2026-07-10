@@ -19,7 +19,6 @@
 *.exe
 
 #Папки
-.git/
 .vscode/
 .qodo
 build/

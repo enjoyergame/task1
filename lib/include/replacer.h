@@ -7,13 +7,12 @@
 
 #ifndef REPLACER_H
 #define REPLACER_H
-#include <string.h>
-#include <stdlib.h>
-#include <stdint.h>
-#include <ctype.h>
-#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+#include <stdbool.h>
 
 typedef struct
 {
