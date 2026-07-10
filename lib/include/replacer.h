@@ -16,9 +16,9 @@
 
 typedef struct
 {
-    uint8_t *data;
-    size_t length;
-    size_t match_idx;
+    uint8_t *data; // Буфер
+    size_t length; // Количество байтов в буфере
+    size_t match_idx; // Внутренний индекс
 } replacer;
 
 replacer strtobyte(char *input_str);

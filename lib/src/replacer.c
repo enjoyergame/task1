@@ -79,6 +79,14 @@ replacer strtobyte(char *input_str)
             free_replacer(&r);
             return r;
         }
+
+        // пределы байта
+        if (val < 0 || val > 0xFF)
+        {
+            free_replacer(&r);
+            return r;
+        }
+
         r.data[i] = (uint8_t)val;
     }
     return r;
