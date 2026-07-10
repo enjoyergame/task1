@@ -81,6 +81,33 @@ int replace_stream(FILE *in, FILE *out, replacer *search, replacer *replace)
 
     while ((bytes_read = fread(buffer, 1, N, in)) > 0)
     {
+        for (size_t i = 0; i < bytes_read; i++)
+        {
+            if (buffer[i] == search->data[search->match_idx])
+            {
+                search->match_idx++;
+                
+                if (search->match_idx == search->length)
+                {
+                    fwrite(replace->data, 1, replace->length, out);
+                    search->match_idx = 0;
+                }
+            }
+            else
+            {
+                if (search->match_idx > 0)
+                {
+                    fwrite(search->data, 1, search->match_idx, out);
+                    search->match_idx = 0;
+                    
+                    if (buffer[i] == search->data[0]) {
+                        search->match_idx = 1;
+                        continue;
+                    }
+                }
+                fwrite(&buffer[i], 1, 1, out);
+            }
+        }
     }
 
     return 0;
