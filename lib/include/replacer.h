@@ -7,10 +7,11 @@
 
 #ifndef REPLACER_H
 #define REPLACER_H
-#include <stdint.h>
-#include <stddef.h>
-#include <stdlib.h>
 #include <string.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <ctype.h>
+#include <stdbool.h>
 
 typedef struct {
     uint8_t *data;
