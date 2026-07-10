@@ -13,13 +13,21 @@ replacer strtobytes_smart(char *input_str) {
         return r;
     }
 
-    if (strncmp(input_str, "0x", 2) == 0) {
-        if (strlen(input_str) <= 2) {
+    // Пропускаем пробелы ищем начало данных
+    char *ptr = input_str;
+    while (isspace((unsigned char)*ptr)) {
+        ptr++;
+    }
+
+    // Проверяем 0x или 0X
+    if (ptr[0] == '0' && (ptr[1] == 'x' || ptr[1] == 'X')) {
+        // есть ли что-то после 0x/0X
+        if (ptr[2] == '\0') {
              replacer r = {NULL, 0, 0}; // если на входе только 0x
              return r;
         }
         // Если хекс strtobyte для строки без 0x
-        return strtobyte(input_str + 2);
+        return strtobyte(ptr + 2);
     }
 
     // обрабатываем дефолтный текст
