@@ -13,7 +13,6 @@
 #include <string.h>
 #include <ctype.h>
 
-
 typedef struct
 {
     uint8_t *data; // Буфер
@@ -21,7 +20,6 @@ typedef struct
     size_t match_idx; // Внутренний индекс
 } replacer;
 
-replacer strtobyte(char *input_str);
 replacer strtobytes_smart(char *input_str);
 void free_replacer(replacer *r);
 

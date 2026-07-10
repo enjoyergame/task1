@@ -9,6 +9,7 @@
 #include <stdint.h>
 #include "replacer.h"
 
+
 int main()
 {
     printf("N = %d\n", N);
