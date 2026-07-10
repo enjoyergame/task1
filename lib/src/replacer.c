@@ -50,6 +50,7 @@ replacer strtobytes_smart(char *input_str) {
     r.match_idx = 0;
     
     return r;
+}
 
 replacer strtobyte(char *input_str)
 {
