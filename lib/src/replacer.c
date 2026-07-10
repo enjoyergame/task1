@@ -13,7 +13,7 @@ replacer strtobytes_smart(char *input_str) {
         return r;
     }
 
-    // Пропускаем пробелы ищем начало данных
+    // Пропускаем пробелы находим начало данных
     char *ptr = input_str;
     while (isspace((unsigned char)*ptr)) {
         ptr++;
@@ -21,7 +21,7 @@ replacer strtobytes_smart(char *input_str) {
 
     // Проверяем 0x или 0X
     if (ptr[0] == '0' && (ptr[1] == 'x' || ptr[1] == 'X')) {
-        // есть ли что-то после 0x/0X
+        // Проверяем, есть ли что-то после 0x/0X
         if (ptr[2] == '\0') {
              replacer r = {NULL, 0, 0}; // если на входе только 0x
              return r;
@@ -32,18 +32,24 @@ replacer strtobytes_smart(char *input_str) {
 
     // обрабатываем дефолтный текст
     replacer r = {NULL, 0, 0};
-    r.length = strlen(input_str);
-    r.data = (uint8_t *)malloc(r.length);
+    // Используем ptr, чтобы убрать пробелы
+    size_t data_len = strlen(ptr); 
+    
+    //+1 для '\0' 
+    r.data = (uint8_t *)malloc(data_len + 1);
     
     if (r.data == NULL) {
         r.length = 0;
         return r;
     }
 
-    memcpy(r.data, input_str, r.length);
+    memcpy(r.data, ptr, data_len);
+    r.data[data_len] = '\0';
+    // не от r.data[data_len] потому что в нем /0
+    r.length = data_len;
     r.match_idx = 0;
+    
     return r;
-}
 
 replacer strtobyte(char *input_str)
 {
