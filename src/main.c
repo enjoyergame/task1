@@ -15,15 +15,15 @@ int main(int argc, char *argv[])
     // Проверяем аргв
     if (argc != 5)
     {
-        fprintf(stderr, "Использование: %s <входной_файл> <выходной_файл> <шаблон_поиска> <шаблон_замены>\n", argv[0]);
-        fprintf(stderr, "Пример: %s in.txt out.txt \"test\" \"0x31323334\"\n", argv[0]);
+        fprintf(stderr, "usage: %s <input_file> <output_file> <search_pattern> <replace_pattern>\n", argv[0]);
+        fprintf(stderr, "example: %s in.txt out.txt \"test\" \"0x31323334\"\n", argv[0]);
         return 1;
     }
 
     FILE *in = fopen(argv[1], "rb");
     if (in == NULL)
     {
-        fprintf(stderr, "Ошибка: Не удалось открыть входной файл %s\n", argv[1]);
+        fprintf(stderr, "error: cant open input file %s\n", argv[1]);
         fclose(in);
         return 1;
     }
@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
     FILE *out = fopen(argv[2], "wb");
     if (out == NULL)
     {
-        fprintf(stderr, "Ошибка: Не удалось создать выходной файл %s\n", argv[2]);
+        fprintf(stderr, "error: cant create output file %s\n", argv[2]);
         fclose(in);
         return 1;
     }
@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
 
     if (search.length == 0 || search.data == NULL)
     {
-        fprintf(stderr, "Ошибка: Некорректный или пустой шаблон поиска.\n");
+        fprintf(stderr, "error: Invalid or empty search pattern.\n");
         free_replacer(&search);
         free_replacer(&replace);
         fclose(in);
@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
 
     if (result != 0)
     {
-        fprintf(stderr, "Ошибка во время обработки потока.\n");
+        fprintf(stderr, "error: Error occurred while processing the stream.\n");
     }
 
     free_replacer(&search);
