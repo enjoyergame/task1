@@ -29,7 +29,62 @@ int check_file_content(const char *filename, const char *expected, size_t exp_le
     return memcmp(buffer, expected, exp_len) == 0;
 }
 
+int test_hex_parsing() {
+    printf("Test 1 (HEX Parsing): ");
+    replacer r = strtobytes_smart("0x610062"); 
+
+    if (r.length == 3 && r.data[0] == 0x61 && r.data[1] == 0x00 && r.data[2] == 0x62) {
+        printf("PASSED\n");
+        free_replacer(&r);
+        return 1;
+    }
+    printf("FAILED\n");
+    free_replacer(&r);
+    return 0;
+}
+
+
+int test_text_parsing() {
+    printf("Test 2 (Text Parsing): ");
+    replacer r = strtobytes_smart("abc");
+    
+    if (r.length == 3 && r.data[0] == 'a' && r.data[1] == 'b' && r.data[2] == 'c') {
+        printf("PASSED\n");
+        free_replacer(&r);
+        return 1;
+    }
+    printf("FAILED\n");
+    free_replacer(&r);
+    return 0;
+}
+
+
+int test_invalid_hex() {
+    printf("Test 3 (Invalid HEX): ");
+    replacer r = strtobytes_smart("0x123"); 
+
+    if (r.length == 0 && r.data == NULL) {
+        printf("PASSED\n");
+        free_replacer(&r);
+        return 1;
+    }
+    printf("FAILED\n");
+    free_replacer(&r);
+    return 0;
+}
 int main() {
-    printf("Helper functions compiled successfully!\n");
+    printf("--- Running Replacer Tests ---\n");
+    int passed_tests = 0;
+    
+    passed_tests += test_hex_parsing();
+    passed_tests += test_text_parsing();
+    passed_tests += test_invalid_hex();
+    
+    printf("------------------------------\n");
+    printf("Total passed: %d/3\n", passed_tests);
+    
+    if (passed_tests < 3) {
+        return 1; 
+    }
     return 0;
 }
