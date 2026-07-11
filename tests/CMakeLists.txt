@@ -1,5 +1,1 @@
-add_executable(run_tests test_replacer.c)
-
-target_link_libraries(run_tests PRIVATE replacer_lib)
-
-add_test(NAME ReplacerTestSuite COMMAND run_tests)
+register_all_tests_in_dir("${CMAKE_CURRENT_SOURCE_DIR}" replacer_tests replacer_lib)

@@ -27,6 +27,9 @@ if(BUILD_TESTING)
     )
 endif()
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+include(Testing)
+
 add_subdirectory(lib)
 add_subdirectory(src)
 
