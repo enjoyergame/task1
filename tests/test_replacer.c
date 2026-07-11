@@ -153,7 +153,7 @@ int test_eof_partial_match() {
     replace_stream(in, out, &s, &r);
     
     fclose(in); fclose(out);
-    
+
     int passed = check_file_content("out_test7.bin", "hello_te", 8);
     printf(passed ? "PASSED\n" : "FAILED\n");
     
@@ -195,6 +195,84 @@ int test_boundary_split() {
     return passed;
 }
 
+
+int test_empty_file() {
+    printf("Test 9 (Empty File): ");
+    create_test_file("in_test9.bin", "", 0);
+    
+    FILE *in = fopen("in_test9.bin", "rb");
+    FILE *out = fopen("out_test9.bin", "wb");
+    
+    replacer s = strtobytes_smart("test"); 
+    replacer r = strtobytes_smart("X"); 
+    
+    replace_stream(in, out, &s, &r);
+    
+    fclose(in); fclose(out);
+    
+    int passed = check_file_content("out_test9.bin", "", 0);
+    printf(passed ? "PASSED\n" : "FAILED\n");
+    
+    free_replacer(&s); free_replacer(&r);
+    return passed;
+}
+
+int test_deletion() {
+    printf("Test 10 (Deletion/Empty Replace): ");
+    create_test_file("in_test10.bin", "hello_test_world", 16);
+    
+    FILE *in = fopen("in_test10.bin", "rb");
+    FILE *out = fopen("out_test10.bin", "wb");
+    
+    replacer s = strtobytes_smart("test"); 
+    replacer r = strtobytes_smart("");
+    
+    replace_stream(in, out, &s, &r);
+    
+    fclose(in); fclose(out);
+    
+    int passed = check_file_content("out_test10.bin", "hello__world", 12);
+    printf(passed ? "PASSED\n" : "FAILED\n");
+    
+    free_replacer(&s); free_replacer(&r);
+    return passed;
+}
+
+
+int test_large_pattern() {
+    printf("Test 11 (Pattern > N): ");
+    size_t pat_size = 1100;
+
+    char *search_str = malloc(pat_size + 1);
+    memset(search_str, 'A', pat_size);
+    search_str[pat_size] = '\0';
+
+    char *content = malloc(pat_size + 2);
+    memset(content, 'A', pat_size);
+    content[pat_size] = 'B';
+    content[pat_size + 1] = '\0';
+    
+    create_test_file("in_test11.bin", content, pat_size + 1);
+    
+    FILE *in = fopen("in_test11.bin", "rb");
+    FILE *out = fopen("out_test11.bin", "wb");
+    
+    replacer s = strtobytes_smart(search_str); 
+    replacer r = strtobytes_smart("X"); 
+    
+    replace_stream(in, out, &s, &r);
+    
+    fclose(in); fclose(out);
+
+    int passed = check_file_content("out_test11.bin", "XB", 2);
+    printf(passed ? "PASSED\n" : "FAILED\n");
+    
+    free(search_str);
+    free(content);
+    free_replacer(&s); free_replacer(&r);
+    return passed;
+}
+
 int main() {
     printf("--- Running Replacer Tests ---\n");
     int passed_tests = 0;
@@ -204,12 +282,18 @@ int main() {
     passed_tests += test_invalid_hex();
     passed_tests += test_basic_replace();
     passed_tests += test_word_replace();
+    passed_tests += test_overlap_replace();
+    passed_tests += test_eof_partial_match();
+    passed_tests += test_boundary_split();
+    
+    passed_tests += test_empty_file();
+    passed_tests += test_deletion();
+    passed_tests += test_large_pattern();
     
     printf("------------------------------\n");
-    printf("Total passed: %d/5\n", passed_tests);
+    printf("Total passed: %d/11\n", passed_tests);
     
-
-    if (passed_tests < 5) {
+    if (passed_tests < 11) {
         return 1; 
     }
     return 0;
