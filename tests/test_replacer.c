@@ -119,6 +119,82 @@ int test_word_replace() {
     return passed;
 }
 
+int test_overlap_replace() {
+    printf("Test 6 (Overlap aaab): ");
+    create_test_file("in_test6.bin", "aaab", 4);
+    
+    FILE *in = fopen("in_test6.bin", "rb");
+    FILE *out = fopen("out_test6.bin", "wb");
+    
+    replacer s = strtobytes_smart("aab"); 
+    replacer r = strtobytes_smart("X"); 
+    
+    replace_stream(in, out, &s, &r);
+    
+    fclose(in); fclose(out);
+
+    int passed = check_file_content("out_test6.bin", "aX", 2);
+    printf(passed ? "PASSED\n" : "FAILED\n");
+    
+    free_replacer(&s); free_replacer(&r);
+    return passed;
+}
+
+int test_eof_partial_match() {
+    printf("Test 7 (EOF Partial Match): ");
+    create_test_file("in_test7.bin", "hello_te", 8);
+    
+    FILE *in = fopen("in_test7.bin", "rb");
+    FILE *out = fopen("out_test7.bin", "wb");
+    
+    replacer s = strtobytes_smart("test"); 
+    replacer r = strtobytes_smart("X"); 
+    
+    replace_stream(in, out, &s, &r);
+    
+    fclose(in); fclose(out);
+    
+    int passed = check_file_content("out_test7.bin", "hello_te", 8);
+    printf(passed ? "PASSED\n" : "FAILED\n");
+    
+    free_replacer(&s); free_replacer(&r);
+    return passed;
+}
+
+int test_boundary_split() {
+    printf("Test 8 (Block Boundary Split): ");
+    size_t file_size = 1026;
+    char *content = malloc(file_size);
+    memset(content, 'A', file_size);
+
+    content[1022] = 't'; content[1023] = 'e';
+    content[1024] = 's'; content[1025] = 't';
+    
+    create_test_file("in_test8.bin", content, file_size);
+    free(content);
+    
+    FILE *in = fopen("in_test8.bin", "rb");
+    FILE *out = fopen("out_test8.bin", "wb");
+    
+    replacer s = strtobytes_smart("test"); 
+    replacer r = strtobytes_smart("X"); 
+    
+    replace_stream(in, out, &s, &r);
+    
+    fclose(in); fclose(out);
+
+    char *expected = malloc(1023);
+    memset(expected, 'A', 1022);
+    expected[1022] = 'X';
+    
+    int passed = check_file_content("out_test8.bin", expected, 1023);
+    printf(passed ? "PASSED\n" : "FAILED\n");
+    
+    free(expected);
+    free_replacer(&s); free_replacer(&r);
+    return passed;
+}
+
 int main() {
     printf("--- Running Replacer Tests ---\n");
     int passed_tests = 0;
