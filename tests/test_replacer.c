@@ -72,6 +72,53 @@ int test_invalid_hex() {
     free_replacer(&r);
     return 0;
 }
+
+int test_basic_replace() {
+    printf("Test 4 (Basic Replace): ");
+    create_test_file("in_test4.bin", "A", 1);
+    
+    FILE *in = fopen("in_test4.bin", "rb");
+    FILE *out = fopen("out_test4.bin", "wb");
+    
+    replacer s = strtobytes_smart("0x41");
+    replacer r = strtobytes_smart("0x42");
+    
+    replace_stream(in, out, &s, &r);
+    
+    fclose(in); 
+    fclose(out);
+
+    int passed = check_file_content("out_test4.bin", "B", 1);
+    printf(passed ? "PASSED\n" : "FAILED\n");
+    
+    free_replacer(&s); 
+    free_replacer(&r);
+    return passed;
+}
+
+int test_word_replace() {
+    printf("Test 5 (Word Replace): ");
+    create_test_file("in_test5.bin", "hello_test_world", 16);
+    
+    FILE *in = fopen("in_test5.bin", "rb");
+    FILE *out = fopen("out_test5.bin", "wb");
+    
+    replacer s = strtobytes_smart("test"); 
+    replacer r = strtobytes_smart("1234"); 
+    
+    replace_stream(in, out, &s, &r);
+    
+    fclose(in); 
+    fclose(out);
+    
+    int passed = check_file_content("out_test5.bin", "hello_1234_world", 16);
+    printf(passed ? "PASSED\n" : "FAILED\n");
+    
+    free_replacer(&s); 
+    free_replacer(&r);
+    return passed;
+}
+
 int main() {
     printf("--- Running Replacer Tests ---\n");
     int passed_tests = 0;
@@ -79,11 +126,14 @@ int main() {
     passed_tests += test_hex_parsing();
     passed_tests += test_text_parsing();
     passed_tests += test_invalid_hex();
+    passed_tests += test_basic_replace();
+    passed_tests += test_word_replace();
     
     printf("------------------------------\n");
-    printf("Total passed: %d/3\n", passed_tests);
+    printf("Total passed: %d/5\n", passed_tests);
     
-    if (passed_tests < 3) {
+
+    if (passed_tests < 5) {
         return 1; 
     }
     return 0;
