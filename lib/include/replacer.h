@@ -15,9 +15,9 @@
 #include <stdio.h>
 typedef struct
 {
-    uint8_t *data; // Буфер
-    size_t length; // Количество байтов в буфере
-    size_t match_idx; // Внутренний индекс
+    uint8_t *data; // буфер
+    size_t length; // количество байтов в буфере
+    size_t match_idx; // внутренний индекс
 } replacer;
 
 replacer strtobytes_smart(char *input_str);
