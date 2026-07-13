@@ -51,7 +51,7 @@ replacer strtobytes_smart(char *input_str)
         return r;
     }
     //копируем в r.data из птр
-    memcpy(r.data, ptr, data_len);
+    memcpy(r.data, ptr, data_len); // копируем символы в память как байты
     r.data[data_len] = '\0';
     r.length = data_len;
     r.match_idx = 0;
