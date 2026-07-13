@@ -72,10 +72,11 @@ void free_replacer(replacer *r)
 //
 static void feed_byte(FILE *out, replacer *search, replacer *replace, uint8_t c)
 {
+    // Сравниваем текущий байт файла с тем, что мы ожидали по индексу match_idx
     if (c == search->data[search->match_idx])
     {
         search->match_idx++;
-        // Если собрали полное совпадение
+        // Если собрали полное совпадение пишем в файл
         if (search->match_idx == search->length)
         {
             fwrite(replace->data, 1, replace->length, out);
@@ -85,23 +86,23 @@ static void feed_byte(FILE *out, replacer *search, replacer *replace, uint8_t c)
     }
 
     // Если совпадение сорвалось
-    if (search->match_idx == 0)
+    if (search->match_idx == 0)//если метч индекс остался 0 в прошлом ифе просто пишем байт
     {
         fwrite(&c, 1, 1, out);
     }
-    else
+    else//если метч индекс был больше нуля но сейчас  не совпало
     {
-        fwrite(&search->data[0], 1, 1, out);
+        fwrite(&search->data[0], 1, 1, out);//пишем первый байтик (логично что он не подходит)
 
         size_t failed_match_len = search->match_idx;
         search->match_idx = 0;
 
-        for (size_t j = 1; j < failed_match_len; j++)
+        for (size_t j = 1; j < failed_match_len; j++)//реурсивно проверяем все что мы запомнили
         {
             feed_byte(out, search, replace, search->data[j]);
         }
 
-        feed_byte(out, search, replace, c);
+        feed_byte(out, search, replace, c);//тот самый байтик который вызвал срыв
     }
 }
 
@@ -115,14 +116,14 @@ int replace_stream(FILE *in, FILE *out, replacer *search, replacer *replace)
     size_t bytes_read;
     search->match_idx = 0;
 
-    while ((bytes_read = fread(buffer, 1, N, in)) > 0)
+    while ((bytes_read = fread(buffer, 1, N, in)) > 0)//читаем в буффер по 1 байтику N элементов (байтов) из ин
     {
-        for (size_t i = 0; i < bytes_read; i++)
+        for (size_t i = 0; i < bytes_read; i++)//байтс рид равен N
         {
-            feed_byte(out, search, replace, buffer[i]);
+            feed_byte(out, search, replace, buffer[i]);//передаем в фид байт по байтику
         }
     }
-
+    //записываем хвост (все что мы запомнили а файл кончился)
     if (search->match_idx > 0)
     {
         fwrite(search->data, 1, search->match_idx, out);

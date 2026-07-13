@@ -24,13 +24,15 @@
    
    cmake -B build
    
+   cmake -B build -DN=4
+
    cmake --build build
 
 ## Использование программы
 .\build\src\app.exe input.txt output.txt "hello" "world"
 
 .\build\src\app.exe input.bin output.bin "0xDEADBEEF" "0xCAFEBABE0001"
-
+/build/src/app input.txt output.txt "1231234" "ab"
 ## Тесты
 
 cmake --build build --target replacer_tests

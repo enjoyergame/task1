@@ -41,7 +41,7 @@ replacer strtobyte(char *input_str)
         }
 
         char *endptr;
-        long val = strtol(buf, &endptr, 16); //strtol переводит стрку в число принимает
+        long val = strtol(buf, &endptr, 16); //strtol переводит стрку в число
 
 
 
