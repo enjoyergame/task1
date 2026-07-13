@@ -15,13 +15,13 @@ replacer strtobyte(char *input_str)
 
     size_t str_len = strlen(input_str);
 
-    // строка не может быть нечетной
+    // строка не может быть нечетной 1 байт = 2 символа
     if (str_len % 2 != 0)
     {
         return r;
     }
 
-    r.length = str_len / 2;
+    r.length = str_len / 2; // 1 байт = 2 символа
     r.data = (uint8_t *)malloc(r.length);
     if (r.data == NULL)
     {
@@ -41,7 +41,9 @@ replacer strtobyte(char *input_str)
         }
 
         char *endptr;
-        long val = strtol(buf, &endptr, 16);
+        long val = strtol(buf, &endptr, 16); //strtol переводит стрку в число принимает
+
+
 
         // проверка strtol
         if (endptr == buf || *endptr != '\0')

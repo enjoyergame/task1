@@ -10,6 +10,7 @@
 
 replacer strtobytes_smart(char *input_str)
 {
+    //проверка
     if (input_str == NULL)
     {
         replacer r = {NULL, 0, 0};
@@ -18,7 +19,7 @@ replacer strtobytes_smart(char *input_str)
 
     // Пропускаем пробелы находим начало данных
     char *ptr = input_str;
-    while (isspace((unsigned char)*ptr))
+    while (isspace((unsigned char)*ptr))//isspace тру если пробелы табы переносы и тд ансайнг чар что бы не сломать её отрицательными кодами
     {
         ptr++;
     }
@@ -38,10 +39,10 @@ replacer strtobytes_smart(char *input_str)
 
     // обрабатываем дефолтный текст
     replacer r = {NULL, 0, 0};
-    // Используем ptr, чтобы убрать пробелы
+    // Используем ptr т.к там нет пробелов
     size_t data_len = strlen(ptr);
 
-    //+1 для '\0'
+    //память +1 для '\0'
     r.data = (uint8_t *)malloc(data_len + 1);
 
     if (r.data == NULL)
@@ -49,10 +50,9 @@ replacer strtobytes_smart(char *input_str)
         r.length = 0;
         return r;
     }
-
+    //копируем в r.data из птр
     memcpy(r.data, ptr, data_len);
     r.data[data_len] = '\0';
-    // не от r.data[data_len] потому что в нем /0
     r.length = data_len;
     r.match_idx = 0;
 
